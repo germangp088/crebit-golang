@@ -9,19 +9,19 @@ import (
 )
 
 func Init() {
-	database = dbhelper.OpenDb()
+	database := dbhelper.OpenDb()
 	defer database.Close()
 	CreateTransaction(database)
 	CreateBalance(database)
 }
 
 func CreateTransaction(database *sql.DB) {
-	statement, _ := database.Prepare("CREATE TABLE IF NOT EXISTS transaction (transaction_id INTEGER PRIMARY KEY, ttype TEXT, amount NUMERIC, effectiveDate TEXT)")
+	statement, _ := database.Prepare("CREATE TABLE IF NOT EXISTS transactions (transaction_id INTEGER PRIMARY KEY, ttype TEXT, amount NUMERIC, effectiveDate TEXT)")
 	statement.Exec()
 }
 
 func CreateBalance(database *sql.DB) {
 	statement, _ := database.Prepare("CREATE TABLE IF NOT EXISTS balance (balance_id INTEGER PRIMARY KEY, amount NUMERIC)")
 	statement.Exec()
-	balancedb.CreateAmount()
+	balancedb.CreateAmount(0)
 }

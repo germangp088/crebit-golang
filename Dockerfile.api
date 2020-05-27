@@ -1,7 +1,7 @@
 FROM golang
 
 # GOLANG
-WORKDIR /go/src/crebit/
+WORKDIR /go/src/crebit-golang/
 
 RUN go get -d -v  github.com/gorilla/mux
 RUN go install -v  github.com/gorilla/mux
@@ -17,6 +17,6 @@ COPY . .
 RUN go build .
 RUN go install
 
-ENTRYPOINT /go/bin/crebit
+ENTRYPOINT /go/bin/crebit-golang
 
 EXPOSE 8080

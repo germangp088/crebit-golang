@@ -1,7 +1,7 @@
 package transactions
 
 import (
-	"crebit-golang/api/models/transaction"
+	"crebit-golang/api/types/transaction"
 	"encoding/json"
 	"log"
 	"net/http"
@@ -10,27 +10,9 @@ import (
 	"github.com/gorilla/mux"
 )
 
-// HTTP status code 200 and repository model in data
-type Resp struct {
-	Body struct {
-		// HTTP status code 200/201
-		Code int `json:"code"`
-		Data int `json:"id"`
-	}
-}
-
-// HTTP status code 500/400
-type RespError struct {
-	Body struct {
-		// HTTP status code 500/400
-		Code int    `json:"code"`
-		Data string `json:"error"`
-	}
-}
-
 //GetTransactions Get all transactions
 func GetTransactions(w http.ResponseWriter, r *http.Request) {
-	json.NewEncoder(w).Encode('')
+	json.NewEncoder(w).Encode(0)
 }
 
 //GetTransaction Get a transaction by id
@@ -42,6 +24,7 @@ func GetTransaction(w http.ResponseWriter, r *http.Request) {
 		log.Fatal("Invalid param id")
 		http.Error(w, err.Error(), http.StatusBadRequest)
 	}
+	json.NewEncoder(w).Encode(i)
 }
 
 //PostTransaction Add a new transaction

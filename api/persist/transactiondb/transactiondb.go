@@ -1,7 +1,7 @@
 package transactiondb
 
 import (
-	transaction "crebit-golang/api/models/transaction"
+	transaction "crebit-golang/api/types/transaction"
 	dbhelper "crebit-golang/api/persist/dbhelper"
 	"strconv"
 
@@ -11,17 +11,17 @@ import (
 func CreateTransaction(amount float32, ttype string, effectiveDate string) {
 	println("CreateAmount: ", amount)
 
-	database = dbhelper.OpenDb()
+	database := dbhelper.OpenDb()
 	defer database.Close()
 
-	statement, _ = database.Prepare("INSERT INTO transaction (amount, type, effectiveDate) VALUES (?, ?, ?);")
+	statement, _ := database.Prepare("INSERT INTO transaction (amount, type, effectiveDate) VALUES (?, ?, ?);")
 	statement.Exec(amount, ttype, effectiveDate)
 }
 
 func GetTransactions() {
 	println("GetTransactions")
 
-	database = dbhelper.OpenDb()
+	database := dbhelper.OpenDb()
 	defer database.Close()
 
 	rows, _ := database.Query("SELECT transaction_id, ttype, amount, effectiveDate FROM transaction;")
@@ -47,7 +47,7 @@ func GetTransactions() {
 func GetTransactionById(transaction_id int) {
 	println("GetTransactionById: ", transaction_id)
 
-	database = dbhelper.OpenDb()
+	database := dbhelper.OpenDb()
 	defer database.Close()
 
 	rows, _ := database.Query("SELECT transaction_id, type, amount, effectiveDate FROM transaction WHERE transaction_id = ?;", transaction_id)
