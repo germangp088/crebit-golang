@@ -1,0 +1,22 @@
+FROM golang
+
+# GOLANG
+WORKDIR /go/src/crebit/
+
+RUN go get -d -v  github.com/gorilla/mux
+RUN go install -v  github.com/gorilla/mux
+
+RUN go get -d -v  github.com/gorilla/handlers
+RUN go install -v  github.com/gorilla/handlers
+
+RUN go get -d -v  github.com/mattn/go-sqlite3
+RUN go install -v  github.com/mattn/go-sqlite3
+
+COPY . .
+
+RUN go build .
+RUN go install
+
+ENTRYPOINT /go/bin/crebit
+
+EXPOSE 8080
