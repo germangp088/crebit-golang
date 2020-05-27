@@ -8,7 +8,9 @@ class App extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      balance: 0,
+      balance: {
+        amount: 0
+      },
       transactions: [],
       errorMessage: ''
     };
@@ -36,6 +38,7 @@ class App extends React.PureComponent {
 
   getTransactions = async() => {
     const transactions = await getTransactions()
+    console.log({transactions})
     this.setState({
       transactions: transactions || []
     });
@@ -43,8 +46,9 @@ class App extends React.PureComponent {
 
   getBalance = async() => {
     const balance = await getBalance()
+    console.log({balance})
     this.setState({
-        balance: balance
+        balance: balance || this.state.balance
     });
   }
 

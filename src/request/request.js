@@ -4,7 +4,8 @@ import {URL_API} from "../constants/URLConstants";
 export const getTransactions = async () => {
     try {
         const res = await superagent.get(`${URL_API}transactions`);
-        return res.body;
+        console.log(JSON.parse(res.text))
+        return JSON.parse(res.text);
     } catch(err) {
         throw err
     }
@@ -13,7 +14,8 @@ export const getTransactions = async () => {
 export const getBalance = async () => {
     try {
         const res = await superagent.get(`${URL_API}balance`);
-        return res.body;
+        console.log(JSON.parse(res.text))
+        return JSON.parse(res.text);
     } catch(err) {
         throw err
     }
