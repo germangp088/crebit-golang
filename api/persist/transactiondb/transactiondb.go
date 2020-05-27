@@ -3,19 +3,25 @@ package transactiondb
 import (
 	dbhelper "crebit-golang/api/persist/dbhelper"
 	"crebit-golang/api/types/transaction"
+	"log"
 	"strconv"
 
 	_ "github.com/mattn/go-sqlite3"
 )
 
-func CreateTransaction(amount float32, ttype string, effectiveDate string) {
+func CreateTransaction(amount float32, ttype string, effectiveDate string) int64 {
 	println("CreateAmount: ", amount)
 
 	database := dbhelper.OpenDb()
 	defer database.Close()
 
 	statement, _ := database.Prepare("INSERT INTO transactions (amount, ttype, effectiveDate) VALUES (?, ?, ?);")
-	statement.Exec(amount, ttype, effectiveDate)
+	result, _ := statement.Exec(amount, ttype, effectiveDate)
+	lastID, err := result.LastInsertId()
+	if err != nil {
+		log.Panic(err)
+	}
+	return lastID
 }
 
 func GetTransactions() []*transaction.Transaction {

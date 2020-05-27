@@ -2,6 +2,7 @@ package transactions
 
 import (
 	transaction "crebit-golang/api/models/transaction"
+	transactionTypes "crebit-golang/api/types/transaction"
 	"encoding/json"
 	"log"
 	"net/http"
@@ -12,8 +13,8 @@ import (
 
 //GetTransactions Get all transactions
 func GetTransactions(w http.ResponseWriter, r *http.Request) {
-	transactions := transaction.GetTransactions()
-	json.NewEncoder(w).Encode(transactions)
+	ts := transaction.GetTransactions()
+	json.NewEncoder(w).Encode(ts)
 }
 
 //GetTransaction Get a transaction by id
@@ -37,7 +38,9 @@ func GetTransactionById(w http.ResponseWriter, r *http.Request) {
 
 //PostTransaction Add a new transaction
 func PostTransaction(w http.ResponseWriter, r *http.Request) {
-	var transaction = transaction.GetTransactions()
-	_ = json.NewDecoder(r.Body).Decode(&transaction)
-	json.NewEncoder(w).Encode(transaction)
+
+	var t transactionTypes.Transaction
+	_ = json.NewDecoder(r.Body).Decode(&t)
+	id := transaction.CreateTransaction(t.Amount, t.TType)
+	json.NewEncoder(w).Encode(id)
 }
