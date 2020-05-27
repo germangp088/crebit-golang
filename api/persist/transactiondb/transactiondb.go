@@ -2,7 +2,7 @@ package transactiondb
 
 import (
 	dbhelper "crebit-golang/api/persist/dbhelper"
-	"crebit-golang/api/types/transaction"
+	transactionTypes "crebit-golang/api/types/transaction"
 	"log"
 	"strconv"
 
@@ -24,32 +24,35 @@ func CreateTransaction(amount float32, ttype string, effectiveDate string) int64
 	return lastID
 }
 
-func GetTransactions() []*transaction.Transaction {
+func GetTransactions() []transactionTypes.Transaction {
 	println("GetTransactions")
 
 	database := dbhelper.OpenDb()
 	defer database.Close()
 
-	rows, _ := database.Query("SELECT transaction_id, ttype, amount, effectiveDate FROM transactions;")
+	rows, _ := database.Query("SELECT transaction_id, ttype, amount, effectiveDate FROM transactions")
 
-	transactions := []*transaction.Transaction{}
-	var transaction_id int
-	var ttype string
-	var amount float32
-	var effectiveDate string
+	defer rows.Close()
+
+	transactions := []transactionTypes.Transaction{}
 
 	for rows.Next() {
-		rows.Scan(&transaction_id)
-		rows.Scan(&ttype)
-		rows.Scan(&amount)
-		rows.Scan(&effectiveDate)
-		transactions = append(transactions, &transaction.Transaction{TransactionId: transaction_id, TType: ttype, Amount: amount, EffectiveDate: effectiveDate})
+		var transaction_id int
+		var ttype string
+		var amount float32
+		var effectiveDate string
+		err := rows.Scan(&transaction_id, &ttype, &amount, &effectiveDate)
+		if err != nil {
+			log.Fatal(err)
+		}
+		transaction := transactionTypes.Transaction{TransactionId: transaction_id, TType: ttype, Amount: amount, EffectiveDate: effectiveDate}
+		transactions = append(transactions, transaction)
 	}
 
 	return transactions
 }
 
-func GetTransactionById(id int) transaction.Transaction {
+func GetTransactionById(id int) transactionTypes.Transaction {
 	println("GetTransactionById: ", id)
 
 	database := dbhelper.OpenDb()
@@ -65,10 +68,10 @@ func GetTransactionById(id int) transaction.Transaction {
 
 	stmt.QueryRow(strconv.Itoa(id)).Scan(&transaction_id, &ttype, &amount, &effectiveDate)
 
-	println(strconv.Itoa(transaction_id))
-	println(ttype)
-	println(amount)
-	println(effectiveDate)
+	println("transaction_id: ", strconv.Itoa(transaction_id))
+	println("ttype: ", ttype)
+	println("amount: ", amount)
+	println("effectiveDate: ", effectiveDate)
 
-	return transaction.Transaction{TransactionId: transaction_id, TType: ttype, Amount: amount, EffectiveDate: effectiveDate}
+	return transactionTypes.Transaction{TransactionId: transaction_id, TType: ttype, Amount: amount, EffectiveDate: effectiveDate}
 }

@@ -6,7 +6,7 @@ import (
 	"time"
 )
 
-func GetTransactions() []*transaction.Transaction {
+func GetTransactions() []transaction.Transaction {
 	println("GetTransactions")
 	transactions := transactiondb.GetTransactions()
 	return transactions
