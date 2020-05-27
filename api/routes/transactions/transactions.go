@@ -1,6 +1,7 @@
 package transactions
 
 import (
+	balance "crebit-golang/api/models/balance"
 	transaction "crebit-golang/api/models/transaction"
 	transactionTypes "crebit-golang/api/types/transaction"
 	"encoding/json"
@@ -41,6 +42,17 @@ func PostTransaction(w http.ResponseWriter, r *http.Request) {
 
 	var t transactionTypes.Transaction
 	_ = json.NewDecoder(r.Body).Decode(&t)
+
+	_, err := balance.UpdateAmount(t.Amount, t.TType)
+
+	if err != nil {
+		w.WriteHeader(409)
+		json.NewEncoder(w).Encode(err.Error())
+		return
+	}
+
 	id := transaction.CreateTransaction(t.Amount, t.TType)
+
+	w.WriteHeader(http.StatusCreated)
 	json.NewEncoder(w).Encode(id)
 }

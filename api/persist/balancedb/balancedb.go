@@ -31,8 +31,8 @@ func GetAmountById(id int) balance.Balance {
 	return balance.Balance{BalanceId: balance_id, Amount: amount}
 }
 
-func UpdateAmount(amount float32, balance_id int) {
-	println("UpdateAmount: ", amount, balance_id)
+func UpdateAmount(balance_id int, amount float32) {
+	println("UpdateAmount: ", balance_id, amount)
 
 	database := dbhelper.OpenDb()
 	defer database.Close()
