@@ -1,10 +1,12 @@
 package transaction
 
-type Transaction struct {
-	TransactionId int     `json:"transaction_id,omitempty"`
-	TType         string  `json:"type,omitempty"`
-	Amount        float32 `json:"amount,omitempty"`
-	EffectiveDate string  `json:"effectiveDate,omitempty"`
-}
+import (
+	transactiondb "crebit-golang/api/persist/transactiondb"
+	transaction "crebit-golang/api/types/transaction"
+)
 
-type Transactions []*Transaction
+func GetTransactions() []*transaction.Transaction {
+	println("GetTransactions")
+	transactions := transactiondb.GetTransactions()
+	return transactions
+}

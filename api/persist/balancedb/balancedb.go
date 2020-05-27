@@ -3,6 +3,7 @@ package balancedb
 import (
 	dbhelper "crebit-golang/api/persist/dbhelper"
 	balance "crebit-golang/api/types/balance"
+	"log"
 	"strconv"
 
 	_ "github.com/mattn/go-sqlite3"
@@ -14,13 +15,15 @@ func GetAmountById(id int) balance.Balance {
 	database := dbhelper.OpenDb()
 	defer database.Close()
 
-	rows, _ := database.Query("SELECT balance_id, amount FROM balance WHERE balance_id = ?", id)
+	var stmt, _ = database.Prepare("SELECT balance_id, amount FROM balance WHERE balance_id = ?")
+	defer stmt.Close()
+
 	var balance_id int
 	var amount float32
 
-	for rows.Next() {
-		rows.Scan(&balance_id)
-		rows.Scan(&amount)
+	err := stmt.QueryRow(strconv.Itoa(id)).Scan(&balance_id, &amount)
+	if err != nil {
+		log.Fatal(err)
 	}
 
 	println("balance_id: ", strconv.Itoa(balance_id))
@@ -54,7 +57,7 @@ func GetID() int {
 	database := dbhelper.OpenDb()
 	defer database.Close()
 
-	rows, _ := database.Query("SELECT balance_id FROM balance;")
+	rows, _ := database.Query("SELECT balance_id FROM balance")
 	var balance_id int
 
 	for rows.Next() {

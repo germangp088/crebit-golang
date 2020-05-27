@@ -6,7 +6,9 @@ import (
 )
 
 func GetBalance() balance.Balance {
+	println("GetBalance")
 	balance_id := balancedb.GetID()
-	var balance = balancedb.GetAmountById(balance_id)
+	balance := balancedb.GetAmountById(balance_id)
+	println("balance:", balance.BalanceId)
 	return balance
 }
