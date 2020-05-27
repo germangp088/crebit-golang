@@ -23,7 +23,7 @@ func Initialize() {
 	router := mux.NewRouter()
 
 	router.HandleFunc("/transactions", transactions.GetTransactions).Methods("GET")
-	router.HandleFunc("/transactions/{id}", transactions.GetTransaction).Methods("GET")
+	router.HandleFunc("/transactions/{id}", transactions.GetTransactionById).Methods("GET")
 	router.HandleFunc("/transactions", transactions.PostTransaction).Methods("POST")
 	router.HandleFunc("/balance", balance.GetBalance).Methods("GET")
 

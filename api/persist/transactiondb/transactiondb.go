@@ -3,7 +3,6 @@ package transactiondb
 import (
 	dbhelper "crebit-golang/api/persist/dbhelper"
 	"crebit-golang/api/types/transaction"
-	"log"
 	"strconv"
 
 	_ "github.com/mattn/go-sqlite3"
@@ -15,7 +14,7 @@ func CreateTransaction(amount float32, ttype string, effectiveDate string) {
 	database := dbhelper.OpenDb()
 	defer database.Close()
 
-	statement, _ := database.Prepare("INSERT INTO transactions (amount, type, effectiveDate) VALUES (?, ?, ?);")
+	statement, _ := database.Prepare("INSERT INTO transactions (amount, ttype, effectiveDate) VALUES (?, ?, ?);")
 	statement.Exec(amount, ttype, effectiveDate)
 }
 
@@ -50,7 +49,7 @@ func GetTransactionById(id int) transaction.Transaction {
 	database := dbhelper.OpenDb()
 	defer database.Close()
 
-	var stmt, _ = database.Prepare("SELECT transaction_id, type, amount, effectiveDate FROM transactions WHERE transaction_id = ?")
+	var stmt, _ = database.Prepare("SELECT transaction_id, ttype, amount, effectiveDate FROM transactions WHERE transaction_id = ?")
 	defer stmt.Close()
 
 	var transaction_id int
@@ -58,10 +57,7 @@ func GetTransactionById(id int) transaction.Transaction {
 	var amount float32
 	var effectiveDate string
 
-	err := stmt.QueryRow(strconv.Itoa(id)).Scan(&transaction_id, &ttype, &amount, &effectiveDate)
-	if err != nil {
-		log.Fatal(err)
-	}
+	stmt.QueryRow(strconv.Itoa(id)).Scan(&transaction_id, &ttype, &amount, &effectiveDate)
 
 	println(strconv.Itoa(transaction_id))
 	println(ttype)

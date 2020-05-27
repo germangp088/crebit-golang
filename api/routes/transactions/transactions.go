@@ -17,7 +17,7 @@ func GetTransactions(w http.ResponseWriter, r *http.Request) {
 }
 
 //GetTransaction Get a transaction by id
-func GetTransaction(w http.ResponseWriter, r *http.Request) {
+func GetTransactionById(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 
 	i, err := strconv.Atoi(params["id"])
@@ -25,7 +25,14 @@ func GetTransaction(w http.ResponseWriter, r *http.Request) {
 		log.Fatal("Invalid param id")
 		http.Error(w, err.Error(), http.StatusBadRequest)
 	}
-	json.NewEncoder(w).Encode(i)
+	t := transaction.GetTransactionById(i)
+	if t.TransactionId == 0 {
+		log.Println("Not found")
+		w.WriteHeader(http.StatusNotFound)
+		json.NewEncoder(w).Encode(nil)
+		return
+	}
+	json.NewEncoder(w).Encode(t)
 }
 
 //PostTransaction Add a new transaction

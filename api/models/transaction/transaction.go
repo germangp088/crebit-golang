@@ -10,3 +10,10 @@ func GetTransactions() []*transaction.Transaction {
 	transactions := transactiondb.GetTransactions()
 	return transactions
 }
+
+func GetTransactionById(transaction_id int) transaction.Transaction {
+	println("GetTransactionById:", transaction_id)
+	transaction := transactiondb.GetTransactionById(transaction_id)
+	println("transaction:", transaction.TransactionId)
+	return transaction
+}
